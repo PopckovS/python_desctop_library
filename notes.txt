@@ -1,0 +1,147 @@
+---------------------------------Установка PIP в Ubuntu---------------------------------
+
+способ установки программ в Linux - это утилита PIP.С её помощью вы можете устанавливать программы и библиотеки, написанные на Python
+Утилита PIP не поставляется в Ubuntu по умолчанию.В Ubuntu 18.04 есть две версии Python, установленных по умолчанию. Это Python 2 и Python 3.
+Поэтому вам надо устанавливать PIP для обеих версий. По умолчанию PIP использует Python 2. Для Python 3 утилита называется PIP3.
+Тут использовался алгоритм для Ubuntu 18.04
+
+python2 --version
+sudo apt install python-pip
+pip --version      результат: pip 9.0.1 from /usr/lib/python2.7/dist-packages (python 2.7)
+
+python3 --version
+sudo apt install python3-pip
+pip3 --version     результат: pip 9.0.1 from /usr/lib/python3/dist-packages (python 3.6)
+
+
+Как пользоваться  PIP:
+    install - установить пакет;
+    uninstall - удалить пакет;
+    search - найти пакет;
+    list - список установленных пакетов;
+    show - просмотр информации про установленный пакет.
+
+
+--------------------------------- ---------------------------------
+sudo pip install pyowm      Библиотека для просмотра погоды по городу
+sudo pip install pyside2    Библиотека для создания графического интерфейса
+Установка этих пакетов летит в ./.local/lib/python3.6/site-packages/ тут пакеты
+
+sudo pip3 install PyQt5
+    при установки этой библиотеки может возникнуть ошибка с кодом
+        Command "python setup.py egg_info" failed with error code 1 in /tmp/pip-build-vw3gnkee/PyQt5/
+    Если это произошло то надо обновить pip вот этой командой
+        sudo pip3 install --upgrade pip
+    Стандартный pip3 установить ее под версию Python3.6 так что используется интерпритатор Python3.6
+    Есть два способа создания GUI приложений при помощи PyQt5:
+        1) Дизайн виджетов при помощи кода;
+        2) Использование PyQt5 Designer.
+Будем использовать  PyQt5 Designer.
+
+--------------------------------- PyQt5 Designer ---------------------------------
+При создании формы, ее можно сохранить в проекте с расширением .ui
+так получаем файл main_form.ui - который будет содержать сгенерированную форму в
+формате xml типо такого <?xml version="1.0" encoding="UTF-8"?>
+
+Далее есть 2 пути
+    1) Загрузить файл .ui в ваш код Python
+            Чтобы загрузить файл .ui в ваш код Python, вы можете использовать функцию loadUI() из uic вот так:
+            --------------------------------
+            from PyQt5 import QtWidgets, uic
+            import sys
+
+            app = QtWidgets.QApplication([])
+            win = uic.loadUi("mydesign.ui") # расположение вашего файла .ui
+
+            win.show()
+            sys.exit(app.exec())
+            --------------------------------
+            Мы используем sys.exit(app.exec()) вместо использования app.exec() напрямую,
+            чтобы выслать правильный код статуса, родительский процесс, или процесс вызова.
+            Если вы использовали app.exec() напрямую, приложение отправит ноль, что говорит об успехе,
+            и это произойдет даже если приложение упадет.
+
+    2) Конвертировать файл .ui в файл .py при помощи pyuic5;
+
+        Этой командой можно конвертировать файл из ui в py
+        pyuic5 mydesign.ui -o mydesign.py
+
+        Получится нечто вроде этого
+        --------------------------------
+        from PyQt5 import QtCore, QtGui, QtWidgets
+
+
+        class Ui_MainWindow(object):
+            def setupUi(self, MainWindow):
+                MainWindow.setObjectName("MainWindow")
+                MainWindow.resize(480, 600)
+                self.centralwidget = QtWidgets.QWidget(MainWindow)
+                self.centralwidget.setObjectName("centralwidget")
+                MainWindow.setCentralWidget(self.centralwidget)
+                self.menubar = QtWidgets.QMenuBar(MainWindow)
+                self.menubar.setGeometry(QtCore.QRect(0, 0, 480, 22))
+                self.menubar.setObjectName("menubar")
+                MainWindow.setMenuBar(self.menubar)
+                self.statusbar = QtWidgets.QStatusBar(MainWindow)
+                self.statusbar.setObjectName("statusbar")
+                MainWindow.setStatusBar(self.statusbar)
+
+                self.retranslateUi(MainWindow)
+                QtCore.QMetaObject.connectSlotsByName(MainWindow)
+
+            def retranslateUi(self, MainWindow):
+                _translate = QtCore.QCoreApplication.translate
+                MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        --------------------------------
+        Далее мы подключаем сгенерированый скрипт формы в нашу программу: from mydesign import Ui_MainWindow
+--------------------------------- ---------------------------------
+
+CREATE TABLE `menu`(
+`menu_id` INT(11) NOT NULL AUTO_INCREMENT,
+`name` VARCHAR(255) NOT NULL,
+`description` VARCHAR(255) NOT NULL,
+PRIMARY KEY(`menu_id`)
+)ENGINE=INNODB, DEFAULT CHARSET=UTF8, COMMENT='Главное меню для выбора раздела.'
+
+
+`functions_id` INT(11) NOT NULL AUTO_INCREMENT,
+`description` VARCHAR(255) NOT NULL,
+`text` TEXT NULL,
+PRIMARY KEY(`functions_id`)
+)ENGINE=INNODB, DEFAULT CHARSET=UTF8, COMMENT='Функции и их описание.'
+
+
+INSERT INTO `menu`
+(name,description) VALUES
+('Функции','Функции в Python3 их описание, и примеры'),
+('Классы',''),
+('Алгоритмы','Алгоритмы сортировок, и выборок'),
+('Программы','Программы на Python3'),
+('Заметки','Разное'),
+('Материалы','Ссылки на сайты,youtube каналы и книги')
+
+
+
+--------------------------------- ---------------------------------
+
+
+# Выводит список всех модулей
+# help('modules')
+
+# ------------ Первый способ создания формы, конвертацией из ui ---------------
+# from PyQt5 import QtWidgets, uic
+# import sys
+#
+# app = QtWidgets.QApplication([])
+# win = uic.loadUi("form.ui")  # расположение вашего файла .ui
+#
+# win.show()
+# sys.exit(app.exec())
+# -----------------------------------------------------------------------------
+
+  # -------------- Изменения тут не повлияют на изменения в форме что в Designer ---------------
+        # self.ui.label.setFont( QtGui.QFont('SansSerif', 30) )        # Изменение шрифта и размера
+        # self.ui.label.setGeometry( QtCore.QRect(10, 10, 200, 200) )  # изменить геометрию ярлыка
+        # self.ui.label.setText("PyScripts")                           # Меняем текст
+        # ---------------------------------------------------------------------------------------------
+

@@ -1,61 +1,94 @@
-#! /usr/bin/python3.8
-# Создаем приложение GUI
-
-# Импортируем модуль для работы с формами
-from tkinter import *
-from tkinter.ttk import Combobox
-
-# Создаем экземпляр главной формы
-window = Tk()
+#! /usr/bin/python3
 
 
 
-# Установка начального размера окна где первым параметром идет ширина, вторым высота
-window.geometry('700x800')
-# Заголовок с верху
-window.title("Python библиотека")
+# Выводит список всех модулей
+# help('modules')
+
+# ------------ Первый способ создания формы, конвертацией из ui ---------------
+# from PyQt5 import QtWidgets, uic
+# import sys
+#
+# app = QtWidgets.QApplication([])
+# win = uic.loadUi("form.ui")  # расположение вашего файла .ui
+#
+# win.show()
+# sys.exit(app.exec())
+# -----------------------------------------------------------------------------
+
+from PyQt5 import QtWidgets, QtGui, QtCore
+from form import Ui_MainWindow  # импорт нашего сгенерированного файла
+import sys
+import pymysql.cursors
+
+
+# Подключиться к базе данных.
+connectionDB = pymysql.connect(host='localhost',
+                             user='serg',
+                             password='11',
+                             db='tutorial',
+                             charset='utf8mb4',
+                             cursorclass=pymysql.cursors.DictCursor)
+
+
+# connectionDB = pymysql.connect(host=connection['host'],
+#                              user=connection['user'],
+#                              password=connection['password'],
+#                              db=connection['db'],
+#                              charset=connection['charset'],
+#                              cursorclass=pymysql.cursors.DictCursor)
+
+
+
+def getAllFromMenu():
+    if(connectionDB):
+        sql = "SELECT * FROM `menu`"
+        cursor = connectionDB.cursor()
+        # Выполнить команду запроса (Execute Query).
+        cursor.execute(sql)
+
+        print("cursor.description: ", cursor.description)
+        return cursor
+
+        # for row in cursor:
+        #     print(row['name'])
 
 
 
 
-# создаем обьект надписи с заголовком, тутже можно задать размер и стиль шрифта
-label = Label(window, text="Привет Мир!", font=("Arial Bold", 10))
-# устанавливаем надписи методом grid ее положение, метод grid обезателен без него надпись не отобразится
-label.grid(column=0, row=0)
 
 
 
 
-# Обьявление функции для смены надписи, эта функция будет связана с кликом кнопки, обратите внимание что
-# функция должна быть обьявлена перед тем как она будет связана с событием клика.
-# метод (configure/config) можно записать как угодно, изменяет параметры того обьекта к которому он привязан.
-def clicked():
-    text_from_txt = 'Это введенный вами текст = {}'.format(txt.get())
-    label.configure(text=text_from_txt)
-    txt.configure(state='disabled') # блокирую поле ввода после того как выбло введено что либо
+# Главный класс для определения формы
+class mywindow(QtWidgets.QMainWindow):
+    def __init__(self):
+        super(mywindow, self).__init__()
+        self.ui = Ui_MainWindow()
+        self.ui.setupUi(self)
 
-# Создаем обьект класса кнопи, по такомуже принцыпу как и надпись, шрифт тоже можно менять
-# bg - это цвет заднего фона, fg - цвет текста, command=clicked эта запись связывает клик кнопкис функцией
-button = Button(window, text="Не нажимать!",  bg="black", fg="red", command=clicked)
-button.grid(column=2, row=0)
+        # -------------- Изменения тут не повлияют на изменения в форме что в Designer ---------------
+        # self.ui.label.setFont( QtGui.QFont('SansSerif', 30) )        # Изменение шрифта и размера
+        # self.ui.label.setGeometry( QtCore.QRect(10, 10, 200, 200) )  # изменить геометрию ярлыка
+        # self.ui.label.setText("PyScripts")                           # Меняем текст
+        # ---------------------------------------------------------------------------------------------
 
+        # -------------- Добавляем новые значения --------------
+        menu = getAllFromMenu()
+        for row in menu:
+            # print(row['name'])
+            self.ui.comboBox.addItem(row['name'])
 
-
-
-# Поле ввода
-txt = Entry(window, width=10)
-txt.grid(column=1, row=0)
-txt.focus() # Этот метод настраивает фокус сразу на поле ввода
-
-
-
-# Класс Combobox создает подобие <select></select> с выбором значений из списка
-combo = Combobox(window)
-# Набор значений, устанавливаю как тип tuple(неизменяемый), получить выбранное значение можно все также методом get
-combo['values'] = (1, 2, 3, 4, 5, "Текст")
-combo.current(1)  # установите вариант по умолчанию, по индексу
-combo.grid(column=0, row=0)
+        # self.ui.comboBox.addItem("Функции")
+        # self.ui.comboBox.addItem("Классы")
+        # self.ui.comboBox.addItem("Алгоритмы")
+        # self.ui.comboBox.addItem("Программы")
+        # self.ui.comboBox.addItem("Заметки")
+        # -------------------------------------------------------
 
 
-# Запуск главной формы и всего приложения
-window.mainloop()
+app = QtWidgets.QApplication([])
+application = mywindow()
+application.show()
+
+sys.exit(app.exec())
