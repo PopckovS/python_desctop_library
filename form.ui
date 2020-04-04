@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>427</width>
+    <width>505</width>
     <height>600</height>
    </rect>
   </property>
@@ -23,9 +23,45 @@ color:#FDFDFB;</string>
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>181</width>
+      <width>201</width>
       <height>25</height>
      </rect>
+    </property>
+   </widget>
+   <widget class="QTableWidget" name="tableWidget">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>50</y>
+      <width>191</width>
+      <height>461</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>520</y>
+      <width>89</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>PushButton</string>
+    </property>
+   </widget>
+   <widget class="Line" name="line">
+    <property name="geometry">
+     <rect>
+      <x>210</x>
+      <y>-90</y>
+      <width>31</width>
+      <height>1631</height>
+     </rect>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Vertical</enum>
     </property>
    </widget>
   </widget>
@@ -34,7 +70,7 @@ color:#FDFDFB;</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>427</width>
+     <width>505</width>
      <height>22</height>
     </rect>
    </property>
@@ -42,6 +78,9 @@ color:#FDFDFB;</string>
     <property name="title">
      <string>File</string>
     </property>
+    <addaction name="actionfirst"/>
+    <addaction name="separator"/>
+    <addaction name="actionsecond"/>
    </widget>
    <widget class="QMenu" name="menuOptions">
     <property name="title">
@@ -52,6 +91,21 @@ color:#FDFDFB;</string>
    <addaction name="menuOptions"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionfirst">
+   <property name="text">
+    <string>first</string>
+   </property>
+  </action>
+  <action name="actionsecond">
+   <property name="text">
+    <string>second</string>
+   </property>
+  </action>
+  <action name="action111">
+   <property name="text">
+    <string>111</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

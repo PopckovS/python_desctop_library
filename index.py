@@ -1,92 +1,82 @@
 #! /usr/bin/python3
 
-
-
-# Выводит список всех модулей
-# help('modules')
-
-# ------------ Первый способ создания формы, конвертацией из ui ---------------
-# from PyQt5 import QtWidgets, uic
-# import sys
-#
-# app = QtWidgets.QApplication([])
-# win = uic.loadUi("form.ui")  # расположение вашего файла .ui
-#
-# win.show()
-# sys.exit(app.exec())
-# -----------------------------------------------------------------------------
+from form import Ui_MainWindow  # Импорт главной сгенерированной формы
+from secondForm import Ui_Form      # Импорт вторичной формы
 
 from PyQt5 import QtWidgets, QtGui, QtCore
-from form import Ui_MainWindow  # импорт нашего сгенерированного файла
+from ModelBase import ModelBase
 import sys
-import pymysql.cursors
-
-
-# Подключиться к базе данных.
-connectionDB = pymysql.connect(host='localhost',
-                             user='serg',
-                             password='11',
-                             db='tutorial',
-                             charset='utf8mb4',
-                             cursorclass=pymysql.cursors.DictCursor)
-
-
-# connectionDB = pymysql.connect(host=connection['host'],
-#                              user=connection['user'],
-#                              password=connection['password'],
-#                              db=connection['db'],
-#                              charset=connection['charset'],
-#                              cursorclass=pymysql.cursors.DictCursor)
+import os
 
 
 
-def getAllFromMenu():
-    if(connectionDB):
-        sql = "SELECT * FROM `menu`"
-        cursor = connectionDB.cursor()
-        # Выполнить команду запроса (Execute Query).
-        cursor.execute(sql)
+# Вторичная форма, вызывается при клике на кнопку
+class secondwindow(QtWidgets.QMainWindow):
 
-        print("cursor.description: ", cursor.description)
-        return cursor
-
-        # for row in cursor:
-        #     print(row['name'])
+    # Главный метод для запуска формы, и методов для извлечения данных из Бд
+    def __init__(self):
+        super(secondwindow, self).__init__()
+        self.ui = Ui_Form()
+        self.ui.setupUi(self)
 
 
 
 
-
-
-
-
-# Главный класс для определения формы
+# Главный класс для запуска формы
 class mywindow(QtWidgets.QMainWindow):
+
+    ModelBase = None
+
+
+    # Главный метод для запуска формы, и методов для извлечения данных из Бд
     def __init__(self):
         super(mywindow, self).__init__()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
-        # -------------- Изменения тут не повлияют на изменения в форме что в Designer ---------------
-        # self.ui.label.setFont( QtGui.QFont('SansSerif', 30) )        # Изменение шрифта и размера
-        # self.ui.label.setGeometry( QtCore.QRect(10, 10, 200, 200) )  # изменить геометрию ярлыка
-        # self.ui.label.setText("PyScripts")                           # Меняем текст
-        # ---------------------------------------------------------------------------------------------
+        self.createConnection()  # Запуск метода создания подключения к Бд
+        self.createMainMenu()    # Запуск метода для создания главного меню
 
-        # -------------- Добавляем новые значения --------------
-        menu = getAllFromMenu()
+        # привязка клика на кнопку к Методу(для запуска второго окна)
+        self.ui.pushButton.clicked.connect(self.btnClicked)
+
+
+
+
+    # Событие связвает клик на кнопку и создание вторичной формы
+    def btnClicked(self):
+        self.ex3 = secondwindow()
+        self.ex3.show()
+
+
+
+    # Этот метод выбирает текущий эллемент из ComboBox
+    def whichComboBoxSelect(self):
+        er = self.ui.comboBox.setCurrentIndex(1)
+
+
+
+    # Этот метод выбирает все эллементы из ComboBox
+    # def whichSelect(self):
+    #     for i in range(self.ui.comboBox.count()):
+    #         print(self.ui.comboBox.itemText(i))
+
+
+
+    # Создает Экземпляр класса для работы с БД
+    def createConnection(self):
+        self.ModelBase = ModelBase()
+
+
+    # Метод для создания главного меню со списком разделов
+    def createMainMenu(self):
+        menu = self.ModelBase.getAllFromMenu()
         for row in menu:
-            # print(row['name'])
             self.ui.comboBox.addItem(row['name'])
 
-        # self.ui.comboBox.addItem("Функции")
-        # self.ui.comboBox.addItem("Классы")
-        # self.ui.comboBox.addItem("Алгоритмы")
-        # self.ui.comboBox.addItem("Программы")
-        # self.ui.comboBox.addItem("Заметки")
-        # -------------------------------------------------------
 
 
+# Запуск всего приложения
 app = QtWidgets.QApplication([])
 application = mywindow()
 application.show()
