@@ -19,6 +19,51 @@ class secondwindow(QtWidgets.QMainWindow):
         self.ui = Ui_Form()
         self.ui.setupUi(self)
 
+        # self.ui.pushButton.clicked.connect(self.btnClicked)
+        # self.ui.pushButton.clicked.connect(self.changePHPversion('5.6', '7.2'))
+        # self.ui.pushButton_2.clicked.connect(self.changePHPversion('7.2', '5.6'))
+
+        # self.cre1()
+        # self.cre2()
+
+    # def cre1(self):
+    #     button1 = QtWidgets.QPushButton('7.2', self)
+    #     button1.setToolTip('This is an example button')
+    #     button1.move(200, 70)  # Указать место положение для кнопки
+    #     button1.show()  # Этот метод отображает кнопку на форме, без этого будет скрыта
+    #     button1.clicked.connect(self.changePHPversion('5.6', '7.2'))
+    #
+    # def cre2(self):
+    #     button = QtWidgets.QPushButton('5.6', self)
+    #     button.setToolTip('This is an example button')
+    #     button.move(100, 70)  # Указать место положение для кнопки
+    #     button.show()  # Этот метод отображает кнопку на форме, без этого будет скрыта
+    #     button.clicked.connect(self.changePHPversion('7.2', '5.6'))
+
+
+    # def changePHPversion(self, disable_php, enable_php):
+    #
+    #     disable = [
+    #         'sudo a2dismod php7.4',
+    #         'sudo a2dismod php7.3',
+    #         'sudo a2dismod php7.2',
+    #         'sudo a2dismod php7.1',
+    #         'sudo a2dismod php5.6'
+    #     ]
+    #
+    #     list = [
+    #         'sudo a2enmod php{0}'.format(disable_php),
+    #         'sudo service apache2 restart',
+    #         'sudo update-alternatives  --set php /usr/bin/php{0}'.format(enable_php)
+    #     ]
+    #
+    #     for i in disable:
+    #         os.system(i)
+    #
+    #     for i in list:
+    #         os.system(i)
+
+
 
 
 
@@ -41,12 +86,48 @@ class mywindow(QtWidgets.QMainWindow):
         self.ui.pushButton.clicked.connect(self.btnClicked)
 
 
+    def createNewButton(self):
+        button = QtWidgets.QPushButton('Туц Баттон', self)
+        button.setToolTip('This is an example button')
+        button.move(100, 70) # Указать место положение для кнопки
+        button.show() # Этот метод отображает кнопку на форме, без этого будет скрыта
 
+    def createNewSomthing(self):
+        some = QtWidgets.QCheckBox('Check', self)
+        some.move(200,200)
+        some.show()
 
     # Событие связвает клик на кнопку и создание вторичной формы
     def btnClicked(self):
         self.ex3 = secondwindow()
         self.ex3.show()
+
+        # У каждого виджета есть метод deleteLater - который удаляет эллемент
+        self.ui.pushButton.deleteLater()
+        self.ui.pushButton = None
+
+        # Метод создания новой кнопки
+        self.createNewButton()
+        self.createNewButton()
+
+        self.createNewSomthing()
+        # self.pushButton = QtWidgets.QPushButton(self.centralwidget)
+        # self.pushButton.setGeometry(QtCore.QRect(50, 520, 89, 25))
+        # self.pushButton.setObjectName("pushButton")
+        # self.pushButton.setStyleSheet('background-color: green;')
+
+        # self.btn = QtWidgets.QPushButton('Button', self)
+        # self.btn.setStyleSheet('background-color: green;')
+        # # self.btn.clicked.connect(self.buts)
+        # self.setGeometry(300, 300, 300, 220)
+        # self.setWindowTitle('Icon')
+        # self.setWindowIcon(QtGui.QIcon('web.png'))
+
+        # self.show()
+
+        # layout.removeWidget(self.widget_name)
+        # self.widget_name.deleteLater()
+        # self.widget_name = None
 
 
 
